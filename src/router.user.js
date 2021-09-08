@@ -1,0 +1,43 @@
+const router = require("express").Router();
+const User = require("./model.user");
+
+router.get("/", async (req, res) => {
+  try {
+    const query = req.query["role"]
+      ? { role: req.query["role"].toLocaleUpperCase() }
+      : {};
+    const users = await User.find(query);
+    res.json(users);
+  } catch (e) {
+    res.status(500);
+  }
+});
+router.post("/register", async (req, res) => {
+  try {
+    const c = req.body;
+    const user = await User.create(c);
+
+    res.json({ user: user });
+  } catch (e) {
+    res.status(500);
+  }
+});
+router.post("/login", async (req, res) => {
+  try {
+    const u = req.body;
+    // const user = await User.find({username: c.username, password: c.password})
+    const user = await User.findOne({ username: u.username });
+    
+    if (user && user.verifyPassword(u.password)) {
+      res.json({
+        user: user,
+      });
+    } else {
+      res.status(401).json({message: 'invalid username or password'});
+    }
+  } catch (e) {
+    res.status(500);
+  }
+});
+
+module.exports = router;
