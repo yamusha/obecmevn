@@ -5,6 +5,8 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
+const auth = require('./middleware.auth')
+
 require('./setup.mongoose')
 
 // const router = require('./router.employee')
@@ -21,7 +23,7 @@ app.use('/file', require('./router.file'))
 
 app.use('/employees', require('./router.employee'))
 
-app.use('/customers', require('./router.customer'))
+app.use('/customers', auth, require('./router.customer'))
 
 app.use('/users', require('./router.user'))
 

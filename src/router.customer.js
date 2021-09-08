@@ -4,6 +4,7 @@ const Customer = require('./model.customer')
 const customers = [1, 2, 3, 4, 5]
 
 router.get('/', async(req, res) => {
+  console.log(res.locals);
   try {
       const customers = await Customer.find()
       res.json(customers)
